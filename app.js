@@ -115,9 +115,6 @@ app.post('/post/comment', function(req, res) {
     , body: req.body.comment
     , created: new Date()
   };
-
-  console.log(data);
-
   db.post.update({ _id: db.ObjectId(req.body.id) }, {
     $push: { comments: data }}, { safe: true }, function(err, field) {
       res.redirect('/'); 

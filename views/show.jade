@@ -5,8 +5,7 @@ div.body #{post.body}
 div.tags
   for tag in post.tags
     span #{tag}
-div Last modification: #{post.modified}
-div Posted: #{post.created}
+div Posted: #{moment(post.created).format('LLL')}
 div Posted by: #{post.author.username}
 
 h2 User comments
@@ -16,6 +15,7 @@ h2 User comments
       div.comment
         div #{comment.body}
         div comment by #{comment.name}
+        div posted #{moment(comment.created).fromNow()}
 - else
     div No comments added yet, be first.
     

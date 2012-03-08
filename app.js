@@ -6,6 +6,7 @@
 var express = require('express')
   , routes = require('./routes')
   , crypto = require('crypto')
+  , moment = require('moment')
   , db = require('mongojs').connect('blog', ['post', 'user']);
 
 var conf = {
@@ -35,6 +36,9 @@ app.configure('production', function(){
   app.use(express.errorHandler()); 
 });
 
+app.helpers({
+  moment: moment
+});
 
 app.dynamicHelpers({
   user: function(req, res) {
@@ -54,7 +58,7 @@ function isUser(req, res, next) {
 // Listing
 app.get('/', function(req, res) {
   var fields = { subject: 1, body: 1, tags: 1, created: 1, author: 1 };
-  db.post.find({ state: 'published'}, fields, function(err, posts) {
+  db.post.find({ state: 'published'}, fields).sort({ created: -1}, function(err, posts) {
     if (!err && posts) {
       res.render('index.jade', { title: 'Blog list', postList: posts }); 
     }
@@ -78,7 +82,6 @@ app.post('/post/add', isUser, function(req, res) {
         username: req.session.user.user
     }
   };
-  console.log(values);
 
   db.post.insert(values, function(err, post) {
     console.log(err, post);
@@ -109,9 +112,11 @@ app.get('/post/:postid', function(req, res) {
 app.post('/post/comment', function(req, res) {
   var data = {
       name: req.body.name
-    , comment: req.body.comment
+    , body: req.body.comment
     , created: new Date()
   };
+
+  console.log(data);
 
   db.post.update({ _id: db.ObjectId(req.body.id) }, {
     $push: { comments: data }}, { safe: true }, function(err, field) {

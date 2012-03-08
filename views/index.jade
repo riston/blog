@@ -12,4 +12,4 @@ for post in postList
         for tag in post.tags
           span #{tag}
       div.post-time
-        span #{post.created}
+        span #{moment(post.created).format('LLL')}

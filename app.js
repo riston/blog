@@ -43,6 +43,14 @@ app.dynamicHelpers({
 });
 // Routes
 
+function isUser(req, res, next) {
+  if (req.session.user) {
+    next();
+  } else {
+    next(new Error('You must be user to access this page'));
+  }
+}
+
 // Listing
 app.get('/', function(req, res) {
   var fields = { subject: 1, body: 1, tags: 1, created: 1, author: 1 };
@@ -53,11 +61,11 @@ app.get('/', function(req, res) {
   });
 });
 
-app.get('/post/add', function(req, res) {
+app.get('/post/add', isUser, function(req, res) {
   res.render('add.jade', { title: 'Add new blog post '});
 });
 
-app.post('/post/add', function(req, res) {
+app.post('/post/add', isUser, function(req, res) {
   var values = {
       subject: req.body.subject
     , body: req.body.body
@@ -118,7 +126,7 @@ app.get('/login', function(req, res) {
   });
 });
 
-app.get('/logout', function(req, res) {
+app.get('/logout', isUser, function(req, res) {
   req.session.destroy();
   res.redirect('/');
 });

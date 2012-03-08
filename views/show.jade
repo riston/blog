@@ -1,0 +1,30 @@
+h1 #{post.subject}
+
+div.body #{post.body}
+
+div.tags
+  for tag in post.tags
+    span #{tag}
+div Last modification: #{post.modified}
+div Posted: #{post.created}
+div Posted by: #{post.author.username}
+
+h2 User comments
+for comment in post.comments
+  div.comment
+    div #{comment.body}
+    div comment by #{comment.name}
+    
+h2 Add comment
+form(name="add-comment",method="post",action="/post/comment")
+  input(type="hidden",name="id",value="#{post._id}")
+  div.row
+    div
+      label Name
+    input(type="text", name="name")
+  div.row
+    div
+      label Comment
+    textarea(name="comment", rows="10", cols="20")
+  div.row
+    input(type="submit",name="send",value="Comment")

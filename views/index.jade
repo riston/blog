@@ -1,0 +1,15 @@
+h1= title
+
+div Welcome to my blog, think and comment here what you think.
+
+for post in postList
+  div.items
+    a(href="/show/#{post._id}")
+      h2 #{post.subject}
+    div #{post.body}
+    div#info 
+      div.tags
+        for tag in post.tags
+          span #{tag}
+      div.post-time
+        span #{post.created}

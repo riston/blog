@@ -53,6 +53,30 @@ app.get('/', function(req, res) {
   });
 });
 
+app.get('/post/add', function(req, res) {
+  res.render('add.jade', { title: 'Add new blog post '});
+});
+
+app.post('/post/add', function(req, res) {
+  var values = {
+      subject: req.body.subject
+    , body: req.body.body
+    , tags: req.body.tags.split(',')
+    , state: 'published'
+    , created: new Date()
+    , modified: new Date()
+    , comments: []
+    , author: { 
+        username: req.session.user.user
+    }
+  };
+  console.log(values);
+
+  db.post.insert(values, function(err, post) {
+    console.log(err, post);
+    res.redirect('/');
+  });
+});
 // Show post
 // Route param pre condition
 app.param('postid', function(req, res, next, id) {
@@ -66,7 +90,7 @@ app.param('postid', function(req, res, next, id) {
   });
 });
 
-app.get('/show/:postid', function(req, res) {
+app.get('/post/:postid', function(req, res) {
   res.render('show.jade', { 
     title: 'Showing post - ' + req.post.subject,
     post: req.post 

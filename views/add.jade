@@ -1,0 +1,18 @@
+h1 Adding new blog post
+
+form(name="add-post",method="post",action="/post/add")
+  div.row
+    div
+      label Subject:
+    input(type="text",name="subject")
+  div.row
+    div
+      label Content
+    textarea(name="body", rows="10", cols="30")
+  div.row
+    div
+      label Tags (comma-separated)
+    input(type="text",name="tags")
+     
+  div.row
+    input(type="submit",name="post",value="Post")

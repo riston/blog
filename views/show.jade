@@ -10,10 +10,14 @@ div Posted: #{post.created}
 div Posted by: #{post.author.username}
 
 h2 User comments
-for comment in post.comments
-  div.comment
-    div #{comment.body}
-    div comment by #{comment.name}
+
+- if (post.comments)
+    for comment in post.comments
+      div.comment
+        div #{comment.body}
+        div comment by #{comment.name}
+- else
+    div No comments added yet, be first.
     
 h2 Add comment
 form(name="add-comment",method="post",action="/post/comment")

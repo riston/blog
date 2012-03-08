@@ -4,7 +4,7 @@ div Welcome to my blog, think and comment here what you think.
 
 for post in postList
   div.items
-    a(href="/show/#{post._id}")
+    a(href="/post/#{post._id}")
       h2 #{post.subject}
     div #{post.body}
     div#info 

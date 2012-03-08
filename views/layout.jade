@@ -11,6 +11,7 @@ html
         div
           - if (user)
             a(href="/logout") Logout #{user.user}
+            span |
             a(href="/post/add") Add post
           - else 
             a(href="/login") Login

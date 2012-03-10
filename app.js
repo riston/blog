@@ -60,7 +60,7 @@ app.get('/', function(req, res) {
   var fields = { subject: 1, body: 1, tags: 1, created: 1, author: 1 };
   db.post.find({ state: 'published'}, fields).sort({ created: -1}, function(err, posts) {
     if (!err && posts) {
-      res.render('index.jade', { title: 'Blog list', postList: posts }); 
+      res.render('index.jade', { title: 'New era blog', postList: posts }); 
     }
   });
 });

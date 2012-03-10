@@ -1,18 +1,36 @@
-!!!
+!!! 5
 html
   head
     title= title
-    link(rel='stylesheet', href='/stylesheets/reset.css')
+    link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
-    div#header
-    div#container!= body
-    div#footer
-        div Made by Risto Novik 2012
-        div
-          - if (user)
-            a(href="/logout") Logout #{user.user}
-            span |
-            a(href="/post/add") Add post
-          - else 
-            a(href="/login") Login
+
+    div.navbar.navbar-fixed-top
+      div.navbar-inner
+        div.container
+          a(class="btn btn-navbar",data-toggle="collapse",data-target=".nav-collapse")
+            span.icon-bar
+            span.icon-bar
+            span.icon-bar
+          a(class="brand",href="/") New era Blog
+          div.nav-collapse
+            ul.nav
+              li.active
+                a(href="/") Home
+              - if (user)
+                li
+                  a(href="/post/add") Add post
+              li
+                a(href="#") Contact
+            p.navbar-text.pull-right
+              - if (user)
+                  span Logged in as 
+                  a(href="/logout") #{user.user}
+              - else
+                a(href="/login") Login user
+
+    div.container!= body
+      hr
+      footer
+        p Made by Risto Novik &copy; 2012

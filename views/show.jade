@@ -1,34 +1,39 @@
 h1 #{post.subject}
 
-div.body #{post.body}
+p #{post.body}
 
-div.tags
+p.tags
   for tag in post.tags
-    span #{tag}
-div Posted: #{moment(post.created).format('LLL')}
-div Posted by: #{post.author.username}
+    strong 
+      a #{tag} 
+div.row
+  div.span4.offset8
+    | Posted by: #{post.author.username}
+    | Posted: #{moment(post.created).format('LLL')}
+  
 
-h2 User comments
+h3 User comments
 
-- if (post.comments)
+- if (post.comments.length)
     for comment in post.comments
-      div.comment
-        div #{comment.body}
-        div comment by #{comment.name}
-        div posted #{moment(comment.created).fromNow()}
+        p
+          strong #{comment.body} 
+          em comment by #{comment.name} 
+          em posted #{moment(comment.created).fromNow()}
 - else
-    div No comments added yet, be first.
+    p No comments added yet, be first.
     
-h2 Add comment
-form(name="add-comment",method="post",action="/post/comment")
-  input(type="hidden",name="id",value="#{post._id}")
-  div.row
-    div
-      label Name
-    input(type="text", name="name")
-  div.row
-    div
-      label Comment
-    textarea(name="comment", rows="10", cols="20")
-  div.row
-    input(type="submit",name="send",value="Comment")
+form(class="form-horizontal",name="add-comment",method="post",action="/post/comment")
+  fieldset
+    legend Add comment
+    input(type="hidden",name="id",value="#{post._id}")
+    div.control-group
+      label.control-label Name
+      div.controls
+        input(type="text",name="name",class="input-xlarge")
+    div.control-group
+      label.control-label Comment
+      div.controls
+        textarea(name="comment", rows="6", cols="40")   
+    div.form-actions
+      input(type="submit",value="Comment",name="comment",class="btn btn-primary")

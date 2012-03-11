@@ -1,11 +1,16 @@
-h2 Login user
+form(class="form-horizontal",name="login-form",method="post",action="/login")
+  fieldset
+    legend Login user
 
-form(name="login-form",method="post",action="/login")
-  div.row
-    label Username:
-    input(type="text",name="username")
-  div.row
-    label Password:
-    input(type="password",name="password")
-  div.row
-    input(type="submit",name="login",value="Login")
+    div.control-group
+      label.control-label Username:
+      div.controls
+        input(type="text",name="username",class="input-xlarge")
+
+    div.control-group
+      label.control-label Password:
+      div.controls
+        input(type="password",name="password",class="input-xlarge")
+
+    div.form-actions
+      input(type="submit",value="Login",name="login",class="btn btn-primary")

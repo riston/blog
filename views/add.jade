@@ -1,18 +1,22 @@
-h1 Adding new blog post
+form(class="form-horizontal",name="add-post",method="post",action="/post/add")
+  fieldset
+    legend Add new blog post
 
-form(name="add-post",method="post",action="/post/add")
-  div.row
-    div
-      label Subject:
-    input(type="text",name="subject")
-  div.row
-    div
-      label Content
-    textarea(name="body", rows="10", cols="30")
-  div.row
-    div
-      label Tags (comma-separated)
-    input(type="text",name="tags")
-     
-  div.row
-    input(type="submit",name="post",value="Post")
+    div.control-group
+      label.control-label Subject:
+      div.controls
+        input(type="text",name="subject",class="input-xlarge")
+
+    div.control-group
+      label.control-label Content:
+      div.controls
+        textarea(name="body", rows="10", cols="30")
+ 
+    div.control-group
+      label.control-label Tags:
+      div.controls
+        input(type="text",name="tags",class="input-xlarge")
+        p.help-block (Comma separated values, like CSV)
+
+    div.form-actions
+      input(type="submit",value="Post",name="post",class="btn btn-primary")

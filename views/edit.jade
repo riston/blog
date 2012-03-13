@@ -1,0 +1,23 @@
+form(class="form-horizontal",name="edit-post",method="post",action="/post/edit/#{blogPost._id}")
+  fieldset
+    legend Edit post ##{blogPost._id}
+
+    div.control-group
+      label.control-label Subject:
+      div.controls
+        input(type="text",name="subject",class="input-xlarge span6",value="#{blogPost.subject}")
+
+    div.control-group
+      label.control-label Content:
+      div.controls
+        textarea(name="body",rows="10",cols="30",class="span6") #{blogPost.body}
+ 
+    div.control-group
+      label.control-label Tags:
+      div.controls
+        input(type="text",name="tags",class="input-xlarge",value="#{blogPost.tags.join(',')}")
+        p.help-block (Comma separated values, like CSV)
+
+    input(type="hidden",name="id",value="#{blogPost._id}")
+    div.form-actions
+      input(type="submit",value="Edit",name="edit",class="btn btn-primary")

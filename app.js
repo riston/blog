@@ -91,13 +91,35 @@ app.post('/post/add', isUser, function(req, res) {
 // Show post
 // Route param pre condition
 app.param('postid', function(req, res, next, id) {
-  if (id.length != 24) return next(new Error('The post id is not having correct length'));
+  if (!id && id.length != 24) return next(new Error('The post id is not having correct length'));
 
   db.post.findOne({ _id: db.ObjectId(id) }, function(err, post) {
     if (err) return next(new Error('Make sure you provided correct post id'));
     if (!post) return next(new Error('Post loading failed'));
     req.post = post;
     next();
+  });
+});
+
+app.get('/post/edit/:postid', isUser, function(req, res) {
+  res.render('edit.jade', { title: 'Edit post', blogPost: req.post } );
+});
+
+app.post('/post/edit/:postid', isUser, function(req, res) {
+  db.post.update({ _id: db.ObjectId(req.body.id) }, { 
+    $set: { 
+        subject: req.body.subject
+      , body: req.body.body
+      , tags: req.body.tags.split(',')
+      , modified: new Date()
+    }}, function(err, post) {
+      res.redirect('/');
+    });
+});
+
+app.get('/post/delete/:postid', isUser, function(req, res) {
+  db.post.remove({ _id: db.ObjectId(req.params.postid) }, function(err, field) {
+    res.redirect('/');
   });
 });
 

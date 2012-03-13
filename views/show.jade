@@ -7,8 +7,11 @@ p.tags
     strong 
       a #{tag} 
 div.row
-  div.span4.offset8
-    | Posted by: #{post.author.username}
+  div.span6.offset6
+    - if (user)
+      a(href="/post/edit/#{post._id}") Edit 
+      a(href="/post/delete/#{post._id}") Delete
+    |  Posted by: #{post.author.username}
     | Posted: #{moment(post.created).format('LLL')}
   
 
@@ -26,14 +29,16 @@ h3 User comments
 form(class="form-horizontal",name="add-comment",method="post",action="/post/comment")
   fieldset
     legend Add comment
-    input(type="hidden",name="id",value="#{post._id}")
+    
     div.control-group
       label.control-label Name
       div.controls
-        input(type="text",name="name",class="input-xlarge")
+        input(type="text",name="name",class="input-xlarge span4")
     div.control-group
       label.control-label Comment
       div.controls
-        textarea(name="comment", rows="6", cols="40")   
+        textarea(name="comment",rows="6",cols="40",class="span4") 
+          
+    input(type="hidden",name="id",value="#{post._id}")
     div.form-actions
       input(type="submit",value="Comment",name="comment-btn",class="btn btn-primary")

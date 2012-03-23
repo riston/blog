@@ -20,6 +20,7 @@ var app = module.exports = express.createServer();
 app.configure(function(){
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
+  app.use(express.logger());
   app.use(express.bodyParser());
   app.use(express.methodOverride());
   app.use(express.cookieParser());
@@ -43,6 +44,9 @@ app.helpers({
 app.dynamicHelpers({
   user: function(req, res) {
     return req.session.user;
+  },
+  flash: function(req, res) {
+    return req.flash();
   }
 });
 // Routes
@@ -113,12 +117,18 @@ app.post('/post/edit/:postid', isUser, function(req, res) {
       , tags: req.body.tags.split(',')
       , modified: new Date()
     }}, function(err, post) {
+      if (!err) {
+        req.flash('info', 'Post has been sucessfully edited');
+      }
       res.redirect('/');
     });
 });
 
 app.get('/post/delete/:postid', isUser, function(req, res) {
   db.post.remove({ _id: db.ObjectId(req.params.postid) }, function(err, field) {
+    if (!err) {
+      req.flash('error', 'Post has been deleted');
+    } 
     res.redirect('/');
   });
 });
@@ -139,6 +149,9 @@ app.post('/post/comment', function(req, res) {
   };
   db.post.update({ _id: db.ObjectId(req.body.id) }, {
     $push: { comments: data }}, { safe: true }, function(err, field) {
+      if (!err) {
+        req.flash('success', 'Comment added to post');
+      }
       res.redirect('/'); 
   });
 });

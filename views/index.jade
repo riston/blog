@@ -13,13 +13,16 @@ mixin blogPost(post)
     p
       a(class="btn btn-small",href="/post/#{post._id}") Read more &raquo;  
 
+
 div.hero-unit 
   h1= title
   p Welcome to my blog, comment and think with me, share your ideas...
+
+!=partial('alert', flash)
 
 div
   - for (var i = 0; i < postList.length; i++)
     div.row
       mixin blogPost(postList[i])
       - if (i + 1 < postList.length)
-        mixin blogPost(postList[i + 1])
+        mixin blogPost(postList[++i])

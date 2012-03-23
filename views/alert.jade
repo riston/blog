@@ -1,0 +1,15 @@
+mixin showAlert(alerts)
+    for alert in alerts
+      div #{alert}
+
+- if (flash.info)
+  div.alert.alert-info
+    mixin showAlert(flash.info)
+
+- if (flash.success)
+  div.alert.alert-success
+    mixin showAlert(flash.success)
+
+- if (flash.error)
+  div.alert.alert-error
+    mixin showAlert(flash.error)

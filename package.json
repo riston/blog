@@ -8,5 +8,6 @@
     , "mongojs": ">=0.3.2"
     , "moment": "1.4.0"
     , "validator": "latest"
+    , "gzippo": "0.1.4"
   }
 }

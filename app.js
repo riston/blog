@@ -7,6 +7,8 @@ var express = require('express')
   , routes = require('./routes')
   , crypto = require('crypto')
   , moment = require('moment')
+  , cluster = require('cluster')
+  , os = require('os')
   , db = require('mongojs').connect('blog', ['post', 'user']);
 
 var conf = {
@@ -20,13 +22,14 @@ var app = module.exports = express.createServer();
 app.configure(function(){
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
-  app.use(express.logger());
+  //app.use(express.logger());
   app.use(express.bodyParser());
   app.use(express.methodOverride());
   app.use(express.cookieParser());
   app.use(express.session({ secret: 'wasdsafeAD' }));
-  app.use(app.router);
   app.use(express.static(__dirname + '/public'));
+  app.use(app.router);
+  
 });
 
 app.configure('development', function(){
@@ -34,7 +37,7 @@ app.configure('development', function(){
 });
 
 app.configure('production', function(){
-  app.use(express.errorHandler()); 
+  //app.use(express.errorHandler()); 
 });
 
 app.helpers({
@@ -58,6 +61,14 @@ function isUser(req, res, next) {
     next(new Error('You must be user to access this page'));
   }
 }
+
+app.error(function(err, req, res, next){
+  if (err instanceof NotFound) {
+    res.render('error/404.jade', { title: 'Not found 404' });
+  } else {
+    res.render('error/500.jade', { title: 'Error', error: err });
+  }
+});
 
 // Listing
 app.get('/', function(req, res) {
@@ -95,7 +106,7 @@ app.post('/post/add', isUser, function(req, res) {
 // Show post
 // Route param pre condition
 app.param('postid', function(req, res, next, id) {
-  if (!id && id.length != 24) return next(new Error('The post id is not having correct length'));
+  if (id.length != 24) throw new NotFound('The post id is not having correct length');
 
   db.post.findOne({ _id: db.ObjectId(id) }, function(err, post) {
     if (err) return next(new Error('Make sure you provided correct post id'));
@@ -187,5 +198,28 @@ app.post('/login', function(req, res) {
   });
 });
 
-app.listen(3000);
-console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
+//The 404
+app.get('/*', function(req, res){
+    throw new NotFound;
+});
+
+function NotFound(msg){
+    this.name = 'NotFound';
+    Error.call(this, msg);
+    Error.captureStackTrace(this, arguments.callee);
+}
+
+/**
+ * Adding the cluster support
+ */
+if (cluster.isMaster) {
+  // Be careful with forking workers
+  for (var i = 0; i < os.cpus().length * 1; i++) {
+    var worker = cluster.fork();
+  }
+} else {
+  // Worker processes
+  app.listen(3000);  
+}
+
+
